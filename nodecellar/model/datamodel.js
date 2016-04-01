@@ -1,6 +1,7 @@
-var MongoClient = require('mongodb').MongoClient;
+var mongo = require('mongodb');
+var MongoClient = mongo.MongoClient;
+var ObjectId = mongo.ObjectID;
 var assert = require('assert');
-var ObjectId = require('mongodb').ObjectID;
 var url = 'mongodb://localhost:27017/test';
 
 exports.dbTest = function(req, res) {
