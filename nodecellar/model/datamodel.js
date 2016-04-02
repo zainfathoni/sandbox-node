@@ -1,32 +1,37 @@
  var ObjectId = require('mongodb').ObjectID;
  var assert = require('assert');
 
-exports.insert = function(collection, obj, callback) {
-    collection.insertOne(
-        obj,
+exports.insert = function(collection, item, callback) {
+    collection.insert(
+        item,
         function(err, result) {
-            assert.equal(err, null); // for unit testing
-            callback({ status: 'OK', message: 'Inserted a document into the restaurants collection.' });
+            callback(err, item);
         });
 };
 
 exports.findAll = function(collection, callback) {
-    var cursor = collection.find();
-    cursor.toArray(function(err, items) {
-        assert.equal(err, null); // for unit testing
-        callback(items);
+    collection.find().toArray(function(err, items) {
+        if (items === null || items.length <= 0) {
+            callback(new Error('No item found.'), items);
+        } else {
+            callback(null, items);
+        }
     });
 };
 
 exports.findById = function(collection, id, callback) {
-    if (ObjectId.isValid(id)) {
+    if (!ObjectId.isValid(id)) {
+        callback(new Error('ObjectID is invalid.'), null);
+    } else {
         collection.findOne(
             {'_id': ObjectId.createFromHexString(id)},
             function(err, item) {
-                callback(new Error('Item Not Found.'), item);
+                if (item) {
+                    callback(null, item);
+                } else {
+                    callback(new Error('Item is not found.'), item);
+                }
             }
         );
-    } else {
-        callback(new Error('ObjectID is invalid.'), null);
     }
 };

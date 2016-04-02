@@ -1,7 +1,6 @@
 var mongo = require('mongodb');
 var MongoClient = mongo.MongoClient;
 var ObjectId = mongo.ObjectID;
-var assert = require('assert');
 var url = 'mongodb://localhost:27017/test';
 var datamodel = require('../model/datamodel');
 
@@ -10,10 +9,17 @@ exports.add = function(req, res) {
     console.log('Adding restaurants: ' + JSON.stringify(restaurants));
 
     MongoClient.connect(url, function(err, db) {
-        assert.equal(null, err);
-        datamodel.insert(db.collection('restaurants'), restaurants, function(msg) {
+        if (err) {
+            res.send({ status: 'Error', content: err.message });
+            return;
+        }
+        datamodel.insert(db.collection('restaurants'), restaurants, function(err, items) {
             db.close();
-            res.send(msg)
+            if (err) {
+                res.send({ status: 'Error', content: err.message });
+            } else {
+                res.send({ status: 'OK', content: items });
+            }
         });
     });
 }
@@ -22,10 +28,17 @@ exports.findAll = function(req, res) {
     console.log("Retrieving all documents in restaurants collection.");
     
     MongoClient.connect(url, function(err, db) {
-        assert.equal(null, err);
-        datamodel.findAll(db.collection('restaurants'), function(restaurants) {
+        if (err) {
+            res.send({ status: 'Error', content: err.message });
+            return;
+        }
+        datamodel.findAll(db.collection('restaurants'), function(err, items) {
             db.close();
-            res.send(restaurants);
+            if (err) {
+                res.send({ status: 'Error', content: err.message });
+            } else {
+                res.send({ status: 'OK', content: items });
+            }
         });
     });
 };
@@ -35,10 +48,13 @@ exports.findById = function(req, res) {
     console.log('Retrieving restaurant: ' + id);
     
     MongoClient.connect(url, function(err, db) {
-        assert.equal(null, err);
+        if (err) {
+            res.send({ status: 'Error', content: err.message });
+            return;
+        }
         datamodel.findById(db.collection('restaurants'), id, function(err, item) {
             db.close();
-            if (err || (item == null)) {
+            if (err) {
                 res.send({ status: 'Error', content: err.message });
             } else {
                 res.send({ status: 'OK', content: item });
