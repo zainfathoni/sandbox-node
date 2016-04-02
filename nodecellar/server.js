@@ -9,7 +9,6 @@ app.configure(function () {
     app.use(express.bodyParser());
 });
 
-app.get('/dbtest', datamodel.dbTest);
 app.get('/restaurants', restaurants.findAll);
 app.get('/restaurants/:id', restaurants.findById);
 app.post('/restaurants', restaurants.add);
