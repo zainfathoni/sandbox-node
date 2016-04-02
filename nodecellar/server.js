@@ -13,7 +13,7 @@ app.post('/restaurants', restaurants.add);
 app.get('/restaurants', restaurants.findAll);
 app.get('/restaurants/:id', restaurants.findById);
 app.put('/restaurants/:id', restaurants.update);
-//app.delete('/restaurants/:id', restaurants.delete);
+app.delete('/restaurants/:id', restaurants.delete);
 
 app.listen(3000);
 console.log('Listening on port 3000...');

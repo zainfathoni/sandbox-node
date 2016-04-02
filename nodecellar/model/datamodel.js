@@ -44,9 +44,25 @@ exports.update = function(collection, id, item, callback) {
             item,
             function(err, result) {
                 if (result) {
-                    callback(null, result);
+                    callback(null, item);
                 } else {
                     callback(new Error('Update failed.'), result);
+                }
+            });
+    }
+};
+
+exports.delete = function(collection, id, callback) {
+    if (!ObjectId.isValid(id)) {
+        callback(new Error('ObjectID is invalid.'), null);
+    } else {
+        collection.deleteOne(
+            { '_id': ObjectId.createFromHexString(id) },
+            function(err, result) {
+                if (result) {
+                    callback(null, item);
+                } else {
+                    callback(new Error('Delete failed.'), result);
                 }
             });
     }

@@ -81,4 +81,25 @@ exports.update = function(req, res) {
             }
         });
     });
-}
+};
+
+exports.delete = function(req, res) {
+    var id = req.params.id;
+    var restaurant = req.body;
+    console.log('Deleting restaurant: ' + id);
+
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            res.send({ status: 'Error', content: err.message });
+            return;
+        }
+        datamodel.delete(db.collection('restaurants'), id, function(err, item) {
+            db.close();
+            if (err) {
+                res.send({ status: 'Error', content: err.message });
+            } else {
+                res.send({ status: 'OK', content: item });
+            }
+        });
+    });
+};
