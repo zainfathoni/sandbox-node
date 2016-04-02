@@ -6,7 +6,13 @@ var url = 'mongodb://localhost:27017/test';
 var datamodel = require('../model/datamodel');
 
 exports.findAll = function(req, res) {
-    res.send([{ name: 'restaurant1' }, { name: 'restaurant2' }, { name: 'restaurant3' }]);
+    MongoClient.connect(url, function(err, db) {
+        assert.equal(null, err);
+        datamodel.findAll(db, function(restaurants) {
+            db.close();
+            res.send(restaurants);
+        });
+    });
 };
 
 exports.findById = function(req, res) {

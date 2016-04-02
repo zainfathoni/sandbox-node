@@ -21,3 +21,29 @@ exports.insert = function(db, obj, callback) {
             callback();
         });
 };
+
+exports.findAll = function(db, callback) {
+    var cursor = db.collection('restaurants').find();
+    cursor.toArray(function(err, restaurants) {
+        assert.equal(err, null);
+        console.log("Returned all documents in restaurants collection.");
+        callback(restaurants);
+    });
+};
+
+exports.findBy = function(db, callback) {
+    var cursor = db.collection('restaurants').find({
+        "borough": "Manhattan",
+        "cuisine": "Italian",
+        "name": "Vella",
+        "restaurant_id": "41704620"
+    });
+    cursor.each(function(err, doc) {
+        assert.equal(err, null);
+        if (doc != null) {
+            console.dir(doc);
+        } else {
+            callback();
+        }
+    });
+};
