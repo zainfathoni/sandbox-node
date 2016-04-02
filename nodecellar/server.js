@@ -12,7 +12,7 @@ app.configure(function () {
 app.post('/restaurants', restaurants.add);
 app.get('/restaurants', restaurants.findAll);
 app.get('/restaurants/:id', restaurants.findById);
-//app.put('/restaurants/:id', restaurants.update);
+app.put('/restaurants/:id', restaurants.update);
 //app.delete('/restaurants/:id', restaurants.delete);
 
 app.listen(3000);

@@ -1,6 +1,5 @@
 var mongo = require('mongodb');
 var MongoClient = mongo.MongoClient;
-var ObjectId = mongo.ObjectID;
 var url = 'mongodb://localhost:27017/test';
 var datamodel = require('../model/datamodel');
 
@@ -26,7 +25,7 @@ exports.add = function(req, res) {
 
 exports.findAll = function(req, res) {
     console.log("Retrieving all documents in restaurants collection.");
-    
+
     MongoClient.connect(url, function(err, db) {
         if (err) {
             res.send({ status: 'Error', content: err.message });
@@ -46,7 +45,7 @@ exports.findAll = function(req, res) {
 exports.findById = function(req, res) {
     var id = req.params.id;
     console.log('Retrieving restaurant: ' + id);
-    
+
     MongoClient.connect(url, function(err, db) {
         if (err) {
             res.send({ status: 'Error', content: err.message });
@@ -63,3 +62,22 @@ exports.findById = function(req, res) {
     });
 };
 
+exports.update = function(req, res) {
+    var id = req.params.id;
+    console.log('Updating restaurant: ' + id);
+
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            res.send({ status: 'Error', content: err.message });
+            return;
+        }
+        datamodel.update(db.collection('restaurants'), id, function(err, item) {
+            db.close();
+            if (err) {
+                res.send({ status: 'Error', content: err.message });
+            } else {
+                res.send({ status: 'OK', content: item });
+            }
+        });
+    });
+}

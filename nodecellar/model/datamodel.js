@@ -1,5 +1,5 @@
- var ObjectId = require('mongodb').ObjectID;
- var assert = require('assert');
+var ObjectId = require('mongodb').ObjectID;
+var assert = require('assert');
 
 exports.insert = function(collection, item, callback) {
     collection.insert(
@@ -24,14 +24,32 @@ exports.findById = function(collection, id, callback) {
         callback(new Error('ObjectID is invalid.'), null);
     } else {
         collection.findOne(
-            {'_id': ObjectId.createFromHexString(id)},
+            { '_id': ObjectId.createFromHexString(id) },
             function(err, item) {
                 if (item) {
                     callback(null, item);
                 } else {
                     callback(new Error('Item is not found.'), item);
                 }
-            }
-        );
+            });
+    }
+};
+
+exports.update = function(collection, id, callback) {
+    if (!ObjectId.isValid(id)) {
+        callback(new Error('ObjectID is invalid.'), null);
+    } else {
+        collection.updateOne(
+            { '_id': ObjectId.createFromHexString(id) },
+            {
+                $set: { "cuisine": "American (New)" },
+                $currentDate: { "lastModified": true }
+            }, function(err, item) {
+                if (item) {
+                    callback(null, item);
+                } else {
+                    callback(new Error('Update failed.'), item);
+                }
+            });
     }
 };
