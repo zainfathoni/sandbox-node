@@ -1,5 +1,5 @@
 var express = require('express');
-var wines = require('./routes/wines');
+var restaurants = require('./routes/restaurants');
 var datamodel = require('./model/datamodel');
 
 var app = express();
@@ -9,10 +9,10 @@ app.configure(function () {
     app.use(express.bodyParser());
 });
 
-app.get('/wines', wines.findAll);
-app.get('/wines/:id', wines.findById);
 app.get('/dbtest', datamodel.dbTest);
-app.post('/wines', wines.addWine);
+app.get('/restaurants', restaurants.findAll);
+app.get('/restaurants/:id', restaurants.findById);
+app.post('/restaurants', restaurants.add);
 
 app.listen(3000);
 console.log('Listening on port 3000...');
