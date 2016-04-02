@@ -64,6 +64,7 @@ exports.findById = function(req, res) {
 
 exports.update = function(req, res) {
     var id = req.params.id;
+    var restaurant = req.body;
     console.log('Updating restaurant: ' + id);
 
     MongoClient.connect(url, function(err, db) {
@@ -71,7 +72,7 @@ exports.update = function(req, res) {
             res.send({ status: 'Error', content: err.message });
             return;
         }
-        datamodel.update(db.collection('restaurants'), id, function(err, item) {
+        datamodel.update(db.collection('restaurants'), id, restaurant, function(err, item) {
             db.close();
             if (err) {
                 res.send({ status: 'Error', content: err.message });

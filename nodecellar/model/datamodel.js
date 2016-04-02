@@ -35,20 +35,18 @@ exports.findById = function(collection, id, callback) {
     }
 };
 
-exports.update = function(collection, id, callback) {
+exports.update = function(collection, id, item, callback) {
     if (!ObjectId.isValid(id)) {
         callback(new Error('ObjectID is invalid.'), null);
     } else {
         collection.updateOne(
             { '_id': ObjectId.createFromHexString(id) },
-            {
-                $set: { "cuisine": "American (New)" },
-                $currentDate: { "lastModified": true }
-            }, function(err, item) {
-                if (item) {
-                    callback(null, item);
+            item,
+            function(err, result) {
+                if (result) {
+                    callback(null, result);
                 } else {
-                    callback(new Error('Update failed.'), item);
+                    callback(new Error('Update failed.'), result);
                 }
             });
     }
