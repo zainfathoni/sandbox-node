@@ -6,6 +6,8 @@ var url = 'mongodb://localhost:27017/test';
 var datamodel = require('../model/datamodel');
 
 exports.findAll = function(req, res) {
+    console.log("Retrieving all documents in restaurants collection.");
+    
     MongoClient.connect(url, function(err, db) {
         assert.equal(null, err);
         datamodel.findAll(db, function(restaurants) {
@@ -16,7 +18,16 @@ exports.findAll = function(req, res) {
 };
 
 exports.findById = function(req, res) {
-    res.send({ id: req.params.id, name: "The Name", description: "description" });
+    var id = req.params.id;
+    console.log('Retrieving restaurant: ' + id);
+    
+    MongoClient.connect(url, function(err, db) {
+        assert.equal(null, err);
+        datamodel.findById(db, id, function(restaurant) {
+            db.close();
+            res.send(restaurant);
+        });
+    });
 };
 
 exports.add = function(req, res) {
@@ -25,9 +36,9 @@ exports.add = function(req, res) {
 
     MongoClient.connect(url, function(err, db) {
         assert.equal(null, err);
-        datamodel.insert(db, restaurants, function() {
+        datamodel.insert(db, restaurants, function(msg) {
             db.close();
-            res.send(restaurants)
+            res.send(msg)
         });
     });
 }
