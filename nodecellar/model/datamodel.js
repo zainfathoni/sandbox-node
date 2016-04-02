@@ -31,7 +31,7 @@ exports.findAll = function(db, callback) {
 
 exports.findById = function(db, id, callback) {
     db.collection('restaurants').findOne(
-        {'_id': new ObjectId(id)},
+        {'_id': ObjectId.createFromHexString(id)},
         function(err, item) {
             assert.equal(err, null);
             callback(item);
