@@ -19,11 +19,14 @@ exports.findAll = function(collection, callback) {
 };
 
 exports.findById = function(collection, id, callback) {
-    ObjectId.createFromHexString(id);
-    collection.findOne(
-        {'_id': ObjectId.createFromHexString(id)},
-        function(err, item) {
-            callback(err, item);
-        }
-    );
+    if (ObjectId.isValid(id)) {
+        collection.findOne(
+            {'_id': ObjectId.createFromHexString(id)},
+            function(err, item) {
+                callback(new Error('Item Not Found.'), item);
+            }
+        );
+    } else {
+        callback(new Error('ObjectID is invalid.'), null);
+    }
 };

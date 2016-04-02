@@ -39,7 +39,7 @@ exports.findById = function(req, res) {
         datamodel.findById(db.collection('restaurants'), id, function(err, item) {
             db.close();
             if (err || (item == null)) {
-                res.send({ status: 'Error', content: 'Restaurant not found. id : ' + id });
+                res.send({ status: 'Error', content: err.message });
             } else {
                 res.send({ status: 'OK', content: item });
             }
