@@ -1,8 +1,8 @@
  var ObjectId = require('mongodb').ObjectID;
  var assert = require('assert');
 
-exports.insert = function(db, obj, callback) {
-    db.collection('restaurants').insertOne(
+exports.insert = function(collection, obj, callback) {
+    collection.insertOne(
         obj,
         function(err, result) {
             assert.equal(err, null); // for unit testing
@@ -10,20 +10,20 @@ exports.insert = function(db, obj, callback) {
         });
 };
 
-exports.findAll = function(db, callback) {
-    var cursor = db.collection('restaurants').find();
-    cursor.toArray(function(err, restaurants) {
+exports.findAll = function(collection, callback) {
+    var cursor = collection.find();
+    cursor.toArray(function(err, items) {
         assert.equal(err, null); // for unit testing
-        callback(restaurants);
+        callback(items);
     });
 };
 
-exports.findById = function(db, id, callback) {
-    db.collection('restaurants').findOne(
+exports.findById = function(collection, id, callback) {
+    ObjectId.createFromHexString(id);
+    collection.findOne(
         {'_id': ObjectId.createFromHexString(id)},
         function(err, item) {
-            assert.equal(err, null);
-            callback(item);
+            callback(err, item);
         }
     );
 };

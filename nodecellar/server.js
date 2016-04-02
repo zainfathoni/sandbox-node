@@ -9,9 +9,11 @@ app.configure(function () {
     app.use(express.bodyParser());
 });
 
+app.post('/restaurants', restaurants.add);
 app.get('/restaurants', restaurants.findAll);
 app.get('/restaurants/:id', restaurants.findById);
-app.post('/restaurants', restaurants.add);
+//app.put('/restaurants/:id', restaurants.update);
+//app.delete('/restaurants/:id', restaurants.delete);
 
 app.listen(3000);
 console.log('Listening on port 3000...');
