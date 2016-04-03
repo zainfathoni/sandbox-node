@@ -3,6 +3,7 @@ var MongoClient = mongo.MongoClient;
 var url = 'mongodb://localhost:27017/test';
 var datamodel = require('../model/datamodel');
 
+// Add
 exports.add = function(req, res, next) {
     var restaurants = req.body;
     console.log('Adding restaurants: ' + JSON.stringify(restaurants));
@@ -17,6 +18,7 @@ exports.add = function(req, res, next) {
     });
 }
 
+// Find All
 exports.findAll = function(req, res, next) {
     console.log("Retrieving all documents in restaurants collection.");
 
@@ -30,6 +32,7 @@ exports.findAll = function(req, res, next) {
     });
 };
 
+// Find by Id
 exports.findById = function(req, res, next) {
     var id = req.params.id;
     console.log('Retrieving restaurant: ' + id);
@@ -44,6 +47,7 @@ exports.findById = function(req, res, next) {
     });
 };
 
+// Update
 exports.update = function(req, res, next) {
     var id = req.params.id;
     var restaurant = req.body;
@@ -59,6 +63,7 @@ exports.update = function(req, res, next) {
     });
 };
 
+// Delete
 exports.delete = function(req, res, next) {
     var id = req.params.id;
     var restaurant = req.body;

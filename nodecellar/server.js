@@ -1,39 +1,64 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+var morgan = require('morgan');
 var restaurants = require('./routes/restaurants');
+var sample = require('./routes/sample')
 var datamodel = require('./model/datamodel');
 
+// Initialization
 var app = express();
+var port = process.env.PORT || 3000;
 
-app.configure(function() {
-    app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
-    app.use(express.bodyParser());
+// CONFIGURATION
+// Morgan Logger
+app.use(morgan('combined'));
 
-    // Development error handler
-    if (app.get('env') === 'development') {
-        app.use(function(err, req, res, next) {
-            res.status(err.status || 500);
-            res.render('error', {
-                message: err.message,
-                error: err
-            });
-        });
-    }
+// Body Parser
+app.use(bodyParser.json());
 
-    // Production Error Handler
+// Development error handler
+if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
-            error: {}
+            error: err
         });
+    });
+}
+
+// Production Error Handler
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
     });
 });
 
+// Routing
 app.post('/restaurants', restaurants.add);
 app.get('/restaurants', restaurants.findAll);
 app.get('/restaurants/:id', restaurants.findById);
 app.put('/restaurants/:id', restaurants.update);
 app.delete('/restaurants/:id', restaurants.delete);
 
-app.listen(3000);
-console.log('Listening on port 3000...');
+app.route('/login')
+
+    // show the form (GET http://localhost:8080/login)
+    .get(function(req, res) {
+        res.send('this is the login form');
+    })
+
+    // process the form (POST http://localhost:8080/login)
+    .post(function(req, res) {
+        console.log('processing');
+        res.send('processing the login form!');
+    });
+
+// Apply Routes
+app.use('/sample', sample);
+
+// START SERVER
+app.listen(port);
+console.log('Listening on port ' + port);
