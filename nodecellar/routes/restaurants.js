@@ -3,103 +3,73 @@ var MongoClient = mongo.MongoClient;
 var url = 'mongodb://localhost:27017/test';
 var datamodel = require('../model/datamodel');
 
-exports.add = function(req, res) {
+exports.add = function(req, res, next) {
     var restaurants = req.body;
     console.log('Adding restaurants: ' + JSON.stringify(restaurants));
 
     MongoClient.connect(url, function(err, db) {
-        if (err) {
-            res.send({ status: 'Error', content: err.message });
-            return;
-        }
+        if (err) return next(err);
         datamodel.insert(db.collection('restaurants'), restaurants, function(err, items) {
             db.close();
-            if (err) {
-                res.send({ status: 'Error', content: err.message });
-            } else {
-                res.send({ status: 'OK', content: items });
-            }
+            if (err) return next(err);
+            res.send(items);
         });
     });
 }
 
-exports.findAll = function(req, res) {
+exports.findAll = function(req, res, next) {
     console.log("Retrieving all documents in restaurants collection.");
 
     MongoClient.connect(url, function(err, db) {
-        if (err) {
-            res.send({ status: 'Error', content: err.message });
-            return;
-        }
+        if (err) return next(err);
         datamodel.findAll(db.collection('restaurants'), function(err, items) {
             db.close();
-            if (err) {
-                res.send({ status: 'Error', content: err.message });
-            } else {
-                res.send({ status: 'OK', content: items });
-            }
+            if (err) return next(err);
+            res.send(items);
         });
     });
 };
 
-exports.findById = function(req, res) {
+exports.findById = function(req, res, next) {
     var id = req.params.id;
     console.log('Retrieving restaurant: ' + id);
 
     MongoClient.connect(url, function(err, db) {
-        if (err) {
-            res.send({ status: 'Error', content: err.message });
-            return;
-        }
+        if (err) return next(err);
         datamodel.findById(db.collection('restaurants'), id, function(err, item) {
             db.close();
-            if (err) {
-                res.send({ status: 'Error', content: err.message });
-            } else {
-                res.send({ status: 'OK', content: item });
-            }
+            if (err) return next(err);
+            res.send(item);
         });
     });
 };
 
-exports.update = function(req, res) {
+exports.update = function(req, res, next) {
     var id = req.params.id;
     var restaurant = req.body;
     console.log('Updating restaurant: ' + id);
 
     MongoClient.connect(url, function(err, db) {
-        if (err) {
-            res.send({ status: 'Error', content: err.message });
-            return;
-        }
+        if (err) return next(err);
         datamodel.update(db.collection('restaurants'), id, restaurant, function(err, item) {
             db.close();
-            if (err) {
-                res.send({ status: 'Error', content: err.message });
-            } else {
-                res.send({ status: 'OK', content: item });
-            }
+            if (err) return next(err);
+            res.send(item);
         });
     });
 };
 
-exports.delete = function(req, res) {
+exports.delete = function(req, res, next) {
     var id = req.params.id;
     var restaurant = req.body;
     console.log('Deleting restaurant: ' + id);
 
     MongoClient.connect(url, function(err, db) {
-        if (err) {
-            res.send({ status: 'Error', content: err.message });
-            return;
-        }
+        if (err) return next(err);
         datamodel.delete(db.collection('restaurants'), id, function(err, item) {
             db.close();
-            if (err) {
-                res.send({ status: 'Error', content: err.message });
-            } else {
-                res.send({ status: 'OK', content: item });
-            }
+            if (err) return next(err);
+            res.send(item);
         });
     });
 };
