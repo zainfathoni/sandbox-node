@@ -37,11 +37,11 @@ app.use(function(err, req, res, next) {
 });
 
 // Routing
-app.post('/restaurants', restaurants.add);
-app.get('/restaurants', restaurants.findAll);
-app.get('/restaurants/:id', restaurants.findById);
-app.put('/restaurants/:id', restaurants.update);
-app.delete('/restaurants/:id', restaurants.delete);
+// app.post('/restaurants', restaurants.add);
+// app.get('/restaurants', restaurants.findAll);
+// app.get('/restaurants/:id', restaurants.findById);
+// app.put('/restaurants/:id', restaurants.update);
+// app.delete('/restaurants/:id', restaurants.delete);
 
 app.route('/login')
 
@@ -58,6 +58,7 @@ app.route('/login')
 
 // Apply Routes
 app.use('/sample', sample);
+app.use('/restaurants', restaurants);
 
 // START SERVER
 app.listen(port);
