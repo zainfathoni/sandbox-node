@@ -1,8 +1,19 @@
 var mongo = require('mongodb');
 var router = require('express').Router();
 var MongoClient = mongo.MongoClient;
+var ObjectId = mongo.ObjectID;
 var url = 'mongodb://localhost:27017/test';
 var datamodel = require('../model/datamodel');
+
+// route middleware to validate :name
+router.param('id', function(req, res, next, id) {
+    if (!ObjectId.isValid(id)) {
+        next(new Error('ObjectID is invalid.'));
+    } else {
+        req.id = ObjectId.createFromHexString(id);
+        next();
+    }
+});
 
 // Add
 router.post('/', function(req, res, next) {
@@ -35,7 +46,7 @@ router.get('/', function(req, res, next) {
 
 // Find by Id
 router.get('/:id', function(req, res, next) {
-    var id = req.params.id;
+    var id = req.id;
     console.log('Retrieving restaurant: ' + id);
 
     MongoClient.connect(url, function(err, db) {
@@ -50,7 +61,7 @@ router.get('/:id', function(req, res, next) {
 
 // Update
 router.put('/:id', function(req, res, next) {
-    var id = req.params.id;
+    var id = req.id;
     var restaurant = req.body;
     console.log('Updating restaurant: ' + id);
 
@@ -66,7 +77,7 @@ router.put('/:id', function(req, res, next) {
 
 // Delete
 router.delete('/:id', function(req, res, next) {
-    var id = req.params.id;
+    var id = req.id;
     var restaurant = req.body;
     console.log('Deleting restaurant: ' + id);
 
