@@ -11,11 +11,7 @@ exports.insert = function(collection, item, callback) {
 
 exports.findAll = function(collection, callback) {
     collection.find().toArray(function(err, items) {
-        if (items === null || items.length <= 0) {
-            callback(new Error('No item found.'), items);
-        } else {
-            callback(null, items);
-        }
+        callback(err, items);
     });
 };
 

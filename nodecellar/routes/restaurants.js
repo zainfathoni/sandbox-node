@@ -23,21 +23,15 @@ exports.add = function(req, res) {
     });
 }
 
-exports.findAll = function(req, res) {
+exports.findAll = function(req, res, next) {
     console.log("Retrieving all documents in restaurants collection.");
 
     MongoClient.connect(url, function(err, db) {
-        if (err) {
-            res.send({ status: 'Error', content: err.message });
-            return;
-        }
-        datamodel.findAll(db.collection('restaurants'), function(err, items) {
+        if (err) return next(err);
+        datamodel.findAll(db.collection('restaurantds'), function(err, items) {
             db.close();
-            if (err) {
-                res.send({ status: 'Error', content: err.message });
-            } else {
-                res.send({ status: 'OK', content: items });
-            }
+            if (err) return next(err);
+            res.send(items);
         });
     });
 };
