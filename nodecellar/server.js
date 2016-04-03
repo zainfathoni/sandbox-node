@@ -2,10 +2,15 @@ var express = require('express');
 var restaurants = require('./routes/restaurants');
 var datamodel = require('./model/datamodel');
 
+// Initialization
 var app = express();
 
+// Configuration
 app.configure(function() {
-    app.use(express.logger('dev'));     /* 'default', 'short', 'tiny', 'dev' */
+    // Logger: 'default', 'short', 'tiny', 'dev'
+    app.use(express.logger('dev'));
+
+    // Body Parser
     app.use(express.bodyParser());
 
     // Development error handler
@@ -29,11 +34,13 @@ app.configure(function() {
     });
 });
 
+// Routing
 app.post('/restaurants', restaurants.add);
 app.get('/restaurants', restaurants.findAll);
 app.get('/restaurants/:id', restaurants.findById);
 app.put('/restaurants/:id', restaurants.update);
 app.delete('/restaurants/:id', restaurants.delete);
 
+// Listening
 app.listen(3000);
 console.log('Listening on port 3000...');
