@@ -1,10 +1,22 @@
 var mongo = require('mongodb');
+var router = require('express').Router();
 var MongoClient = mongo.MongoClient;
+var ObjectId = mongo.ObjectID;
 var url = 'mongodb://localhost:27017/test';
 var datamodel = require('../model/datamodel');
 
+// route middleware to validate :name
+router.param('id', function(req, res, next, id) {
+    if (!ObjectId.isValid(id)) {
+        next(new Error('ObjectID is invalid.'));
+    } else {
+        req.id = ObjectId.createFromHexString(id);
+        next();
+    }
+});
+
 // Add
-exports.add = function(req, res, next) {
+router.post('/', function(req, res, next) {
     var restaurants = req.body;
     console.log('Adding restaurants: ' + JSON.stringify(restaurants));
 
@@ -16,10 +28,10 @@ exports.add = function(req, res, next) {
             res.send(items);
         });
     });
-}
+});
 
 // Find All
-exports.findAll = function(req, res, next) {
+router.get('/', function(req, res, next) {
     console.log("Retrieving all documents in restaurants collection.");
 
     MongoClient.connect(url, function(err, db) {
@@ -30,11 +42,11 @@ exports.findAll = function(req, res, next) {
             res.send(items);
         });
     });
-};
+});
 
 // Find by Id
-exports.findById = function(req, res, next) {
-    var id = req.params.id;
+router.get('/:id', function(req, res, next) {
+    var id = req.id;
     console.log('Retrieving restaurant: ' + id);
 
     MongoClient.connect(url, function(err, db) {
@@ -45,11 +57,11 @@ exports.findById = function(req, res, next) {
             res.send(item);
         });
     });
-};
+});
 
 // Update
-exports.update = function(req, res, next) {
-    var id = req.params.id;
+router.put('/:id', function(req, res, next) {
+    var id = req.id;
     var restaurant = req.body;
     console.log('Updating restaurant: ' + id);
 
@@ -61,11 +73,11 @@ exports.update = function(req, res, next) {
             res.send(item);
         });
     });
-};
+});
 
 // Delete
-exports.delete = function(req, res, next) {
-    var id = req.params.id;
+router.delete('/:id', function(req, res, next) {
+    var id = req.id;
     var restaurant = req.body;
     console.log('Deleting restaurant: ' + id);
 
@@ -77,4 +89,6 @@ exports.delete = function(req, res, next) {
             res.send(item);
         });
     });
-};
+});
+
+module.exports = router;
